@@ -1,4 +1,4 @@
-package main
+package tools
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
-	"github.com/qingfenghuohu/tools/redis"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
