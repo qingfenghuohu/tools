@@ -1,4 +1,4 @@
-package tools
+package main
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
+	"github.com/qingfenghuohu/tools/redis"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -223,4 +224,8 @@ func GenIpaddr() string {
 	rand.Seed(time.Now().Unix())
 	ip := fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 	return ip
+}
+
+func main() {
+	fmt.Println(redis.GetInstance("joe").MGet("1:i:joe.domain:state:"))
 }

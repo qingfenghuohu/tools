@@ -34,10 +34,10 @@ func GetInstance(dbName string) *Cache {
 	} else {
 		lock.Lock()
 		defer lock.Unlock()
-		redisConfig := config.Data["cache"].(map[string]interface{})["redis"].(map[string]interface{})[dbName].(map[string]string)
-		host := redisConfig["host"] + ":" + redisConfig["port"]
-		db, _ := strconv.Atoi(redisConfig["db"])
-		pwd, _ := redisConfig["pwd"]
+		redisConfig := config.Data["cache"].(map[string]interface{})["redis"].(map[string]interface{})[dbName].(map[string]interface{})
+		host := redisConfig["host"].(string) + ":" + redisConfig["port"].(string)
+		db, _ := strconv.Atoi(redisConfig["db"].(string))
+		pwd, _ := redisConfig["pwd"].(string)
 		//Connect[dbName] = conn(db, host)
 		Connect[dbName] = NewRedisCache(db, host, pwd, 30)
 
