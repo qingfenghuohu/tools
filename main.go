@@ -226,6 +226,6 @@ func GenIpaddr() string {
 	return ip
 }
 
-func main() {
-	fmt.Println(redis.GetInstance("joe").MGet("1:i:joe.domain:state:"))
-}
+//func main() {
+//	fmt.Println(redis.GetInstance("joe").MGet("1:i:joe.domain:state:"))
+//}
