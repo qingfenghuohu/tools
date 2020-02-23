@@ -8,11 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -223,6 +225,23 @@ func GenIpaddr() string {
 	rand.Seed(time.Now().Unix())
 	ip := fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 	return ip
+}
+
+func GetFieldName(structName interface{}) []string {
+	t := reflect.TypeOf(structName)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	if t.Kind() != reflect.Struct {
+		log.Println("Check type error not Struct")
+		return nil
+	}
+	fieldNum := t.NumField()
+	result := make([]string, 0, fieldNum)
+	for i := 0; i < fieldNum; i++ {
+		result = append(result, t.Field(i).Name)
+	}
+	return result
 }
 
 //func main() {
