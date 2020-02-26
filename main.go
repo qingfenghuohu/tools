@@ -126,13 +126,31 @@ func KsortPostForm(params map[string][]string) string {
 }
 
 func EnCode(id int) string {
-	return strconv.Itoa(MtRand(11111, 99999)) + strconv.Itoa((id+64)*16) + strconv.Itoa(MtRand(111, 999))
+	timeUnix := time.Now().Unix()
+	return strconv.Itoa(MtRand(10, 99)) + strconv.FormatInt(timeUnix, 10) + strconv.Itoa(MtRand(1, 9)) + strconv.Itoa((id+64)*16) + strconv.Itoa(MtRand(100, 999))
 }
 
 func DeCode(code string) int {
-	s := string([]byte(code)[5 : len(code)-3])
+	s := string([]byte(code)[13 : len(code)-3])
 	number, _ := strconv.Atoi(s)
-	return (number / 16) - 64
+	timeUnix, _ := strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 10))
+	timeUnix = timeUnix + 10
+	if 1582712719 < number && number < timeUnix {
+		return 0
+	} else {
+		return (number / 16) - 64
+	}
+}
+
+func CheckCodeTime(code string, t int) bool {
+	s := string([]byte(code)[2:12])
+	number, _ := strconv.Atoi(s)
+	timeUnix, _ := strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 10))
+	if timeUnix-number > t {
+		return true
+	} else {
+		return false
+	}
 }
 
 func RandSeq(n int) string {
