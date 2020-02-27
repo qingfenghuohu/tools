@@ -131,14 +131,18 @@ func (c Cache) MGet(args ...string) map[string]interface{} {
 }
 
 // 获取 字符串类型的值
-func (c Cache) Get(name string) {
-	//var v interface{}
-	//conn := c.pool.Get()
-	//defer conn.Close()
-	//res1,err := redis.String(conn.Do("Get", name))
-	//res2,err2 := conn.Do("Get", name)
-	//err := Deserialization(temp, &v) // 反序列化
-	//return v
+func (c Cache) Get(name string) interface{} {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Bytes(conn.Do("Get", name))
+	return res
+}
+
+func (c Cache) Keys(name string) interface{} {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Bytes(conn.Do("keys", name))
+	return res
 }
 
 // 删除指定的键
@@ -148,7 +152,7 @@ func (c Cache) Delete(keys ...interface{}) (bool, error) {
 	v, err := redis.Bool(conn.Do("DEL", keys...))
 	return v, err
 }
-func Deserialization(data []byte) (interface{}, error) {
+func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
 	return result, err
