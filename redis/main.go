@@ -66,9 +66,8 @@ func NewRedisCache(db int, host string, pwd string, defaultExpiration time.Durat
 // string 类型 添加, v 可以是任意类型
 func (c Cache) Set(name string, v interface{}) error {
 	conn := c.pool.Get()
-	s, _ := Serialization(v) // 序列化
 	defer conn.Close()
-	_, err := conn.Do("SET", name, s)
+	_, err := conn.Do("SET", name, v)
 	return err
 }
 
@@ -134,15 +133,19 @@ func (c Cache) MGet(args ...string) map[string]interface{} {
 func (c Cache) Get(name string) interface{} {
 	conn := c.pool.Get()
 	defer conn.Close()
-	res, _ := redis.Bytes(conn.Do("Get", name))
+	res, _ := redis.String(conn.Do("Get", name))
 	return res
 }
 
-func (c Cache) Keys(name string) interface{} {
+func (c Cache) Keys(name string) []string {
+	var result []string
 	conn := c.pool.Get()
 	defer conn.Close()
-	res, _ := redis.Bytes(conn.Do("keys", name))
-	return res
+	res, _ := redis.ByteSlices(conn.Do("keys", name))
+	for _, v := range res {
+		result = append(result, string(v))
+	}
+	return result
 }
 
 // 删除指定的键
