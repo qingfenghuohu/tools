@@ -210,6 +210,16 @@ func (c Cache) HGetAll(name string) map[string]string {
 	}
 	return res
 }
+func (c Cache) HDel(name string, field string) bool {
+	conn := c.pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("hdel", name, field)
+	if err != nil {
+		fmt.Println("hdel failed", err.Error())
+		return false
+	}
+	return true
+}
 
 // 删除指定的键
 func (c Cache) Delete(keys ...interface{}) (bool, error) {
