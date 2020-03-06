@@ -263,5 +263,5 @@ func GetFieldName(structName interface{}) []string {
 }
 
 //func main() {
-//	fmt.Println(redis.GetInstance("joe").MGet("1:i:joe.domain:state:"))
+//	fmt.Println(redis.GetInstance("pay").HMSet("ww","pay1",1,"pay2",2))
 //}

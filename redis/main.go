@@ -147,6 +147,69 @@ func (c Cache) Keys(name string) []string {
 	}
 	return result
 }
+func (c Cache) HSet(name interface{}, field interface{}, value interface{}) bool {
+	conn := c.pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("hset", name, field, value)
+	if err != nil {
+		fmt.Println("hmset error", err.Error())
+		return false
+	}
+	return true
+}
+func (c Cache) HGet(name interface{}, field interface{}) string {
+	result := ""
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, err := conn.Do("hget", name, field)
+	if err != nil {
+		fmt.Println("hmget failed", err.Error())
+	} else {
+		result = string(res.([]byte))
+	}
+	return result
+}
+func (c Cache) HMSet(name interface{}, args ...interface{}) bool {
+	var params []interface{}
+	conn := c.pool.Get()
+	defer conn.Close()
+	params = append(params, name)
+	params = append(params, args...)
+	_, err := conn.Do("hmset", params...)
+	if err != nil {
+		fmt.Println("hmset error", err.Error())
+		return false
+	}
+	return true
+}
+
+func (c Cache) HMGet(name interface{}, args ...interface{}) map[string]string {
+	result := map[string]string{}
+	var params []interface{}
+	conn := c.pool.Get()
+	defer conn.Close()
+	params = append(params, name)
+	params = append(params, args...)
+	res, err := conn.Do("hmget", params...)
+	if err != nil {
+		fmt.Println("hmget failed", err.Error())
+	} else {
+		for i, v := range res.([]interface{}) {
+			result[args[i].(string)] = string(v.([]byte))
+		}
+	}
+	return result
+}
+func (c Cache) HGetAll(name string) map[string]string {
+	conn := c.pool.Get()
+	defer conn.Close()
+
+	res, err := redis.StringMap(conn.Do("HGETALL", name))
+	if err != nil {
+		fmt.Println("hmget failed", err.Error())
+	}
+	return res
+}
 
 // 删除指定的键
 func (c Cache) Delete(keys ...interface{}) (bool, error) {
