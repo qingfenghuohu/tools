@@ -228,6 +228,18 @@ func (c Cache) Delete(keys ...interface{}) (bool, error) {
 	v, err := redis.Bool(conn.Do("DEL", keys...))
 	return v, err
 }
+func (c Cache) Incr(name string) int {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Int(conn.Do("INCR", name))
+	return res
+}
+func (c Cache) Decr(name string) int {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Int(conn.Do("DECR", name))
+	return res
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
