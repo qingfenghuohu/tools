@@ -305,6 +305,10 @@ func IsMobile(r *http.Request) bool {
 	return false
 }
 
+func Date(date int64, temp string) string {
+	return time.Unix(date, 0).Format(temp)
+}
+
 //func main() {
 //	fmt.Println(redis.GetInstance("pay").Incr("www"))
 //}
