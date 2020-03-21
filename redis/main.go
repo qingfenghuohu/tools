@@ -64,11 +64,15 @@ func NewRedisCache(db int, host string, pwd string, defaultExpiration time.Durat
 }
 
 // string 类型 添加, v 可以是任意类型
-func (c Cache) Set(name string, v interface{}) error {
+func (c Cache) Set(name string, v interface{}) bool {
 	conn := c.pool.Get()
 	defer conn.Close()
 	_, err := conn.Do("SET", name, v)
-	return err
+	if err == nil {
+		return true
+	} else {
+		return false
+	}
 }
 
 // string 类型 添加, v 可以是任意类型
