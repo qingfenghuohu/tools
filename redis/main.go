@@ -134,7 +134,7 @@ func (c Cache) MGet(args ...string) map[string]interface{} {
 }
 
 // 获取 字符串类型的值
-func (c Cache) Get(name string) interface{} {
+func (c Cache) Get(name string) string {
 	conn := c.pool.Get()
 	defer conn.Close()
 	res, _ := redis.String(conn.Do("Get", name))
