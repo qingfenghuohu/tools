@@ -29,7 +29,7 @@ func Md5(str string) string {
 	return md5str
 }
 func MtRand(min int, max int) int {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	return min + rand.Intn(max-min)
 }
 func JsonToMap(content interface{}) map[string]interface{} {
@@ -313,9 +313,10 @@ func ApplyEnCode(Id int, Secret int) int {
 	if Id <= 0 {
 		return 0
 	}
-	num := MtRand(1, 9)
 	mark := strconv.Itoa(MtRand(10, 99))
 	content := strconv.Itoa((Id + Secret) * 16)
+	num := MtRand(1, len(content))
+
 	res := strconv.Itoa(num) + content[:num] + mark + content[num:]
 	result, _ := strconv.Atoi(res)
 	return result
@@ -336,5 +337,8 @@ func ApplyDeCode(Code string, Secret int) int {
 }
 
 //func main() {
-//	fmt.Println(redis.GetInstance("pay").Incr("www"))
+//	fmt.Println(ApplyEnCode(1,118))
+//	fmt.Println(ApplyEnCode(2,118))
+//	fmt.Println(ApplyEnCode(3,118))
+//	fmt.Println(ApplyEnCode(4,118))
 //}
