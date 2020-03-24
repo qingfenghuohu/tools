@@ -132,9 +132,6 @@ func EnCode(id int) string {
 }
 
 func DeCode(code string) int {
-	if code == "" {
-		return 0
-	}
 	s := string([]byte(code)[13 : len(code)-3])
 	number, _ := strconv.Atoi(s)
 	timeUnix, _ := strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 10))
@@ -310,6 +307,18 @@ func IsMobile(r *http.Request) bool {
 
 func Date(date int64, temp string) string {
 	return time.Unix(date, 0).Format(temp)
+}
+
+func ApplyEnCode(Id int, Secret int) int {
+	res := strconv.Itoa(MtRand(10, 99)) + strconv.Itoa((Id+Secret)*16) + strconv.Itoa(MtRand(10, 99))
+	result, _ := strconv.Atoi(res)
+	return result
+}
+
+func ApplyDeCode(Code string, Secret int) int {
+	s := string([]byte(Code)[2 : len(Code)-2])
+	number, _ := strconv.Atoi(s)
+	return (number / 16) - Secret
 }
 
 //func main() {
