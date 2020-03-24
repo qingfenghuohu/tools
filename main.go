@@ -132,6 +132,9 @@ func EnCode(id int) string {
 }
 
 func DeCode(code string) int {
+	if code == "" {
+		return 0
+	}
 	s := string([]byte(code)[13 : len(code)-3])
 	number, _ := strconv.Atoi(s)
 	timeUnix, _ := strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 10))
