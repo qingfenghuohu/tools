@@ -309,12 +309,12 @@ func Date(date int64, temp string) string {
 	return time.Unix(date, 0).Format(temp)
 }
 
-func ApplyEnCode(Id int, Secret int) int {
+func ApplyEnCode(Id int64, Secret int64) int {
 	if Id <= 0 {
 		return 0
 	}
 	mark := strconv.Itoa(MtRand(10, 99))
-	content := strconv.Itoa((Id + Secret) * 16)
+	content := strconv.Itoa(int((Id + Secret) * 16))
 	num := MtRand(1, len(content))
 
 	res := strconv.Itoa(num) + content[:num] + mark + content[num:]
@@ -322,23 +322,25 @@ func ApplyEnCode(Id int, Secret int) int {
 	return result
 }
 
-func ApplyDeCode(Code string, Secret int) int {
+func ApplyDeCode(Code string, Secret int64) int {
 	code, _ := strconv.Atoi(Code)
 	if code <= 0 {
 		return 0
 	}
 	num, _ := strconv.Atoi(string([]byte(Code)[:1]))
 	content := string([]byte(Code)[1:])
-	index := num + 2
-	res := string([]byte(content)[:index]) + string([]byte(content)[index:])
+	one := string([]byte(content)[:num])
+	two := string([]byte(content)[num:])
+	three := string([]byte(two)[2:])
+	res := one + three
 	number, _ := strconv.Atoi(res)
-	result := (number / 16) - Secret
+	result := (number / 16) - int(Secret)
 	return result
 }
 
-//func main() {
-//	fmt.Println(ApplyEnCode(1,118))
-//	fmt.Println(ApplyEnCode(2,118))
-//	fmt.Println(ApplyEnCode(3,118))
-//	fmt.Println(ApplyEnCode(4,118))
-//}
+func main() {
+	code := strconv.Itoa(ApplyEnCode(122, 118))
+	//code := "1143904"
+	fmt.Println(code)
+	fmt.Println(ApplyDeCode(code, 118))
+}
