@@ -338,9 +338,9 @@ func ApplyDeCode(Code string, Secret int64) int {
 	return result
 }
 
-func main() {
-	code := strconv.Itoa(ApplyEnCode(122, 118))
-	//code := "1143904"
-	fmt.Println(code)
-	fmt.Println(ApplyDeCode(code, 118))
-}
+//func main() {
+//	code := strconv.Itoa(ApplyEnCode(122, 118))
+//	//code := "1143904"
+//	fmt.Println(code)
+//	fmt.Println(ApplyDeCode(code, 118))
+//}
