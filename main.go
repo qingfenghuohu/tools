@@ -236,6 +236,9 @@ func GetHost(context *gin.Context) (string, string) {
 
 func StrToTime(str string) int64 {
 	loc, _ := time.LoadLocation("Local")
+	str = strings.Replace(str, "T", " ", 1)
+	tmp := strings.Split(str, "+")
+	str = tmp[0]
 	theTime, _ := time.ParseInLocation("2006-01-02 15:04:05", str, loc)
 	result := theTime.Unix()
 	return result
@@ -337,6 +340,21 @@ func ApplyDeCode(Code string, Secret int64) int {
 	result := (number / 16) - int(Secret)
 	return result
 }
+func StrToSlice(str string) []string {
+	Id := []string{}
+	tmp := strings.Split(str, ",")
+	for _, v := range tmp {
+		if v != "" {
+			Id = append(Id, v)
+		}
+	}
+	return Id
+}
+
+//func ClientIp(c *gin.Context) string {
+//	var clientIP = ""
+//
+//}
 
 //func main() {
 //	code := strconv.Itoa(ApplyEnCode(122, 118))
