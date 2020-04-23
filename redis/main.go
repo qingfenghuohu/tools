@@ -169,7 +169,9 @@ func (c Cache) HGet(name interface{}, field interface{}) string {
 	if err != nil {
 		fmt.Println("hmget failed", err.Error())
 	} else {
-		result = string(res.([]byte))
+		if res != nil {
+			result = string(res.([]byte))
+		}
 	}
 	return result
 }
