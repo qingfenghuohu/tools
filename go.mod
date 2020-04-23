@@ -7,6 +7,7 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/json-iterator/go v1.1.9
 	github.com/qingfenghuohu/config v0.0.0-20200203031926-10c960b0d6d6
+	github.com/satori/go.uuid v1.2.0
 )
 
 replace github.com/qingfenghuohu/tools/redis => /Users/ww/docker/work/tools/redis

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
+	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -132,6 +133,9 @@ func EnCode(id int) string {
 }
 
 func DeCode(code string) int {
+	if len(code) <= 0 {
+		return 0
+	}
 	s := string([]byte(code)[13 : len(code)-3])
 	number, _ := strconv.Atoi(s)
 	timeUnix, _ := strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 10))
@@ -177,11 +181,9 @@ func Struct2Map(m interface{}) map[string]string {
 	var result map[string]string
 	json := jsoniter.ConfigCompatibleWithStandardLibrary
 	data, _ := json.Marshal(m)
-	fmt.Println(string(data))
 	reader := strings.NewReader(string(data))
 	decoder := json.NewDecoder(reader)
 	decoder.Decode(&result)
-	fmt.Println(result)
 	return result
 }
 
@@ -209,15 +211,17 @@ func HttpClientPost(url string, data string) string {
 		"application/x-www-form-urlencoded",
 		strings.NewReader(data))
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+	} else {
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			return string(body)
+		}
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		// handle error
-	}
-
-	return string(body)
+	return ""
 }
 
 func GetHost(context *gin.Context) (string, string) {
@@ -350,11 +354,10 @@ func StrToSlice(str string) []string {
 	}
 	return Id
 }
-
-//func ClientIp(c *gin.Context) string {
-//	var clientIP = ""
-//
-//}
+func GetUUID() string {
+	u2 := uuid.NewV4()
+	return u2.String()
+}
 
 //func main() {
 //	code := strconv.Itoa(ApplyEnCode(122, 118))
