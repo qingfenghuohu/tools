@@ -3,6 +3,7 @@ package tools
 import (
 	"bytes"
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -358,10 +359,64 @@ func GetUUID() string {
 	u2 := uuid.NewV4()
 	return u2.String()
 }
+func Obj2Str(value interface{}) string {
+	var key string
+	if value == nil {
+		return key
+	}
 
-//func main() {
-//	code := strconv.Itoa(ApplyEnCode(122, 118))
-//	//code := "1143904"
-//	fmt.Println(code)
-//	fmt.Println(ApplyDeCode(code, 118))
-//}
+	switch value.(type) {
+	case float64:
+		ft := value.(float64)
+		key = strconv.FormatFloat(ft, 'f', -1, 64)
+	case float32:
+		ft := value.(float32)
+		key = strconv.FormatFloat(float64(ft), 'f', -1, 64)
+	case int:
+		it := value.(int)
+		key = strconv.Itoa(it)
+	case uint:
+		it := value.(uint)
+		key = strconv.Itoa(int(it))
+	case int8:
+		it := value.(int8)
+		key = strconv.Itoa(int(it))
+	case uint8:
+		it := value.(uint8)
+		key = strconv.Itoa(int(it))
+	case int16:
+		it := value.(int16)
+		key = strconv.Itoa(int(it))
+	case uint16:
+		it := value.(uint16)
+		key = strconv.Itoa(int(it))
+	case int32:
+		it := value.(int32)
+		key = strconv.Itoa(int(it))
+	case uint32:
+		it := value.(uint32)
+		key = strconv.Itoa(int(it))
+	case int64:
+		it := value.(int64)
+		key = strconv.FormatInt(it, 10)
+	case uint64:
+		it := value.(uint64)
+		key = strconv.FormatUint(it, 10)
+	case string:
+		key = value.(string)
+	case []byte:
+		key = string(value.([]byte))
+	default:
+		newValue, _ := json.Marshal(value)
+		key = strings.Replace(string(newValue), "\"", "", -1)
+	}
+
+	return key
+}
+func Base64UrlSafeEncode(source []byte) string {
+	bytearr := base64.StdEncoding.EncodeToString(source)
+	safeurl := strings.Replace(string(bytearr), "/", "_", -1)
+	safeurl = strings.Replace(safeurl, "+", "-", -1)
+	safeurl = strings.Replace(safeurl, "=", "", -1)
+	return safeurl
+}
