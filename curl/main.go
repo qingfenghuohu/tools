@@ -15,6 +15,7 @@ type New struct {
 	proxyData  string
 	headerData map[string]interface{}
 	cookieData map[string]interface{}
+	debug      bool
 }
 
 func (do *New) Header(headerData map[string]interface{}) *New {
@@ -38,6 +39,11 @@ func (do *New) Data(contentData map[string]interface{}) *New {
 		tmp = append(tmp, i+"="+tools.Obj2Str(v))
 	}
 	do.content = strings.Join(tmp, "&")
+	return do
+}
+
+func (do *New) Debug() *New {
+	do.debug = true
 	return do
 }
 
@@ -79,6 +85,12 @@ func (do *New) run(Method string, Url string) string {
 	if err != nil {
 		fmt.Println(err)
 	}
+	if do.debug == true {
+		fmt.Println(Method, Url)
+		fmt.Println(do.content)
+		fmt.Println(body)
+	}
+
 	return string(body)
 }
 
