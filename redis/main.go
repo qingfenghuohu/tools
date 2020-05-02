@@ -246,6 +246,21 @@ func (c Cache) Decr(name string) int {
 	res, _ := redis.Int(conn.Do("DECR", name))
 	return res
 }
+
+func (c Cache) DecrBy(name string, num int) int {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Int(conn.Do("DECRBY", name, num))
+	return res
+}
+
+func (c Cache) IncrBy(name string, num int) int {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, _ := redis.Int(conn.Do("INCRBY", name, num))
+	return res
+}
+
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
