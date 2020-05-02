@@ -286,3 +286,12 @@ func JsonToMap(jsonStr string) (map[string]string, error) {
 
 	return m, nil
 }
+
+func IsExistInArray(val int, data []int) bool {
+	for _, v := range data {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
