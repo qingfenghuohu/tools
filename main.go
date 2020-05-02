@@ -420,3 +420,11 @@ func Base64UrlSafeEncode(source []byte) string {
 	safeurl = strings.Replace(safeurl, "=", "", -1)
 	return safeurl
 }
+func IsExistInArray(val int, data []int) bool {
+	for _, v := range data {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
