@@ -420,6 +420,22 @@ func Base64UrlSafeEncode(source []byte) string {
 	safeurl = strings.Replace(safeurl, "=", "", -1)
 	return safeurl
 }
+func StrToSliceInt(str string) []int {
+	var result []int
+	Ids := []string{}
+	tmp := strings.Split(str, ",")
+	for _, v := range tmp {
+		if v != "" {
+			Ids = append(Ids, v)
+		}
+	}
+	Ids = RemoveDuplicateElement(Ids)
+	for _, v := range Ids {
+		tmp1, _ := strconv.Atoi(v)
+		result = append(result, tmp1)
+	}
+	return result
+}
 func IsExistInArray(val int, data []int) bool {
 	for _, v := range data {
 		if v == val {
