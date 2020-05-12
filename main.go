@@ -364,7 +364,6 @@ func Obj2Str(value interface{}) string {
 	if value == nil {
 		return key
 	}
-
 	switch value.(type) {
 	case float64:
 		ft := value.(float64)
@@ -406,6 +405,8 @@ func Obj2Str(value interface{}) string {
 		key = value.(string)
 	case []byte:
 		key = string(value.([]byte))
+	case bool:
+		key = strconv.FormatBool(value.(bool))
 	default:
 		newValue, _ := json.Marshal(value)
 		key = strings.Replace(string(newValue), "\"", "", -1)
@@ -443,4 +444,7 @@ func IsExistInArray(val int, data []int) bool {
 		}
 	}
 	return false
+}
+func TypeOf(v interface{}) string {
+	return fmt.Sprintf("%T", v)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/json-iterator/go"
 	"github.com/qingfenghuohu/config"
+	"github.com/qingfenghuohu/tools/str"
 	"strconv"
 	"sync"
 	"time"
@@ -189,6 +190,30 @@ func (c Cache) HMSet(name interface{}, args ...interface{}) bool {
 	return true
 }
 
+type HMSMD struct {
+	Key  string
+	Data map[string]interface{}
+	Ttl  int
+}
+
+func (c Cache) HMSetMulti(data []HMSMD) {
+	conn := c.pool.Get()
+	defer conn.Close()
+	if len(data) == 0 {
+		return
+	}
+	ttl := map[string]int{}
+	for _, val := range data {
+		for k, v := range val.Data {
+			conn.Send("hmset", val.Key, k, str.Obj2Str(v))
+		}
+		ttl[val.Key] = val.Ttl
+	}
+	for k, v := range ttl {
+		conn.Send("EXPIRE", k, v)
+	}
+	conn.Flush()
+}
 func (c Cache) HMGet(name interface{}, args ...interface{}) map[string]string {
 	result := map[string]string{}
 	var params []interface{}
@@ -205,6 +230,36 @@ func (c Cache) HMGet(name interface{}, args ...interface{}) map[string]string {
 		}
 	}
 	return result
+}
+func (c Cache) HMGetMulti(data map[string][]string) map[string]map[string]string {
+	result := map[string]map[string]string{}
+	conn := c.pool.Get()
+	defer conn.Close()
+	if len(data) == 0 {
+		return result
+	}
+	for key, val := range data {
+		for _, v := range val {
+			conn.Send("hmget", key, v)
+		}
+	}
+	conn.Flush()
+	for key, val := range data {
+		if len(result[key]) == 0 {
+			result[key] = map[string]string{}
+		}
+		for _, v := range val {
+			res, _ := redis.Values(conn.Receive())
+			result[key][v] = ""
+			if res[0] != nil {
+				result[key][v] = string(res[0].([]byte))
+			}
+		}
+	}
+	return result
+}
+func TypeOf(v interface{}) string {
+	return fmt.Sprintf("%T", v)
 }
 func (c Cache) HGetAll(name string) map[string]string {
 	conn := c.pool.Get()
