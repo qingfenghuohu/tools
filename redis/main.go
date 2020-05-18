@@ -281,6 +281,18 @@ func (c Cache) HDel(name string, field string) bool {
 	}
 	return true
 }
+func (c Cache) HMDel(data []interface{}) bool {
+	conn := c.pool.Get()
+	defer conn.Close()
+	if len(data) == 0 {
+		return false
+	}
+	_, err := conn.Do("hdel", data...)
+	if err == nil {
+		return true
+	}
+	return false
+}
 
 // 删除指定的键
 func (c Cache) Delete(keys ...interface{}) (bool, error) {
