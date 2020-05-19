@@ -77,7 +77,7 @@ func (c Cache) Set(name string, v interface{}) bool {
 }
 
 // string 类型 添加, v 可以是任意类型
-func (c Cache) MSet(args ...interface{}) bool {
+func (c Cache) MSetJson(args ...interface{}) bool {
 	conn := c.pool.Get()
 	defer conn.Close()
 	params := make([]interface{}, len(args))
@@ -92,7 +92,21 @@ func (c Cache) MSet(args ...interface{}) bool {
 		k++
 	}
 	res1, err := redis.String(conn.Do("MSET", params...))
-	fmt.Println(err)
+	if err != nil {
+		return false
+	}
+	if res1 == "OK" {
+		return true
+	} else {
+		return false
+	}
+}
+
+// string 类型 添加, v 可以是任意类型
+func (c Cache) MSet(params ...interface{}) bool {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res1, err := redis.String(conn.Do("MSET", params...))
 	if err != nil {
 		return false
 	}
