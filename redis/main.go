@@ -342,6 +342,34 @@ func (c Cache) IncrBy(name string, num int) int {
 	return res
 }
 
+func (c Cache) DecrByMulti(data map[string]int) map[string]bool {
+	var result map[string]bool
+	conn := c.pool.Get()
+	defer conn.Close()
+	for k, v := range data {
+		conn.Send("DECRBY", k, v)
+	}
+	conn.Flush()
+	for k, _ := range data {
+		result[k], _ = redis.Bool(conn.Receive())
+	}
+	return result
+}
+
+func (c Cache) IncrByMulti(data map[string]int) map[string]bool {
+	var result map[string]bool
+	conn := c.pool.Get()
+	defer conn.Close()
+	for k, v := range data {
+		conn.Send("DECINCRBYRBY", k, v)
+	}
+	conn.Flush()
+	for k, _ := range data {
+		result[k], _ = redis.Bool(conn.Receive())
+	}
+	return result
+}
+
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
