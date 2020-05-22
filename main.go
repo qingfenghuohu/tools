@@ -448,3 +448,12 @@ func IsExistInArray(val int, data []int) bool {
 func TypeOf(v interface{}) string {
 	return fmt.Sprintf("%T", v)
 }
+func Abs(data int) int {
+	var result int
+	if data > 0 {
+		result = data
+	} else {
+		result = -data
+	}
+	return result
+}
