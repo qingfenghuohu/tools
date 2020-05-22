@@ -361,7 +361,7 @@ func (c Cache) IncrByMulti(data map[string]int) map[string]bool {
 	conn := c.pool.Get()
 	defer conn.Close()
 	for k, v := range data {
-		conn.Send("DECINCRBYRBY", k, v)
+		conn.Send("INCRBY", k, v)
 	}
 	conn.Flush()
 	for k, _ := range data {
@@ -379,26 +379,27 @@ func (c Cache) Exists(key string) bool {
 	result = res
 	return result
 }
-func (c Cache) HIncr(key, field string, val int) bool {
-	var result bool
+func (c Cache) HIncr(key, field string, val int) int {
+	var result int
 	conn := c.pool.Get()
-	res, err := redis.Bool(conn.Do("HINCRBY", key, field, val))
-	if err != nil {
-		return false
-	}
-	result = res
+	conn.Send("HINCRBY", key, field, val)
+	conn.Send("hmget", key, field)
+	conn.Flush()
+	conn.Receive()
+	res, _ := redis.Values(conn.Receive())
+	result, _ = strconv.Atoi(string(res[0].([]byte)))
 	return result
 }
-func (c Cache) HDecr(key, field string, val int) bool {
-	var result bool
-	conn := c.pool.Get()
+func (c Cache) HDecr(key, field string, val int) int {
+	var result int
 	val = 0 - val
-	res, err := redis.Bool(conn.Do("HINCRBY", key, field, val))
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	result = res
+	conn := c.pool.Get()
+	conn.Send("HINCRBY", key, field, val)
+	conn.Send("hmget", key, field)
+	conn.Flush()
+	conn.Receive()
+	res, _ := redis.Values(conn.Receive())
+	result, _ = strconv.Atoi(string(res[0].([]byte)))
 	return result
 }
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
