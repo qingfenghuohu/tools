@@ -8,7 +8,8 @@ import (
 
 func TestMtRand_Post(t *testing.T) {
 	//res := redis.GetInstance("ppt").Exists("hhh")
-	res := redis.GetInstance("ppt").HDecr("aaa", "111", 3)
+	//res := redis.GetInstance("ppt").HDecr("aaa", "111", 3)
+	res := redis.GetInstance("ppt").HExists("aaa", "112")
 	fmt.Println(res)
 	//data := []interface{}{}
 	//data = append(data, "hhh")

@@ -402,6 +402,16 @@ func (c Cache) HDecr(key, field string, val int) int {
 	result, _ = strconv.Atoi(string(res[0].([]byte)))
 	return result
 }
+func (c Cache) HExists(key, field string) bool {
+	var result bool
+	conn := c.pool.Get()
+	res, err := redis.Bool(conn.Do("HEXISTS", key, field))
+	if err != nil {
+		return false
+	}
+	result = res
+	return result
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
