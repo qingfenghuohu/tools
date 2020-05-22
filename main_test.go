@@ -1,15 +1,13 @@
 package tools
 
 import (
-	"fmt"
-	"github.com/qingfenghuohu/tools/redis"
 	"testing"
 )
 
 func TestMtRand_Post(t *testing.T) {
 	//res := redis.GetInstance("ppt").Exists("hhh")
-	res := redis.GetInstance("ppt").HIncr("aaa", "111", 10)
-	fmt.Println(res)
+	//res := redis.GetInstance("ppt").HDecr("aaa", "111", 5)
+	//fmt.Println(res)
 	//data := []interface{}{}
 	//data = append(data, "hhh")
 	//data = append(data, "1")

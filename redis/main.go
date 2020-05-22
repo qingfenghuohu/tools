@@ -392,8 +392,10 @@ func (c Cache) HIncr(key, field string, val int) bool {
 func (c Cache) HDecr(key, field string, val int) bool {
 	var result bool
 	conn := c.pool.Get()
-	res, err := redis.Bool(conn.Do("HDECRBY", key, field, val))
+	val = 0 - val
+	res, err := redis.Bool(conn.Do("HINCRBY", key, field, val))
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	result = res
