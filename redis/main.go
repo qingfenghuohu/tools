@@ -369,7 +369,36 @@ func (c Cache) IncrByMulti(data map[string]int) map[string]bool {
 	}
 	return result
 }
-
+func (c Cache) Exists(key string) bool {
+	var result bool
+	conn := c.pool.Get()
+	res, err := redis.Bool(conn.Do("EXISTS", key))
+	if err != nil {
+		return false
+	}
+	result = res
+	return result
+}
+func (c Cache) HIncr(key, field string, val int) bool {
+	var result bool
+	conn := c.pool.Get()
+	res, err := redis.Bool(conn.Do("HINCRBY", key, field, val))
+	if err != nil {
+		return false
+	}
+	result = res
+	return result
+}
+func (c Cache) HDecr(key, field string, val int) bool {
+	var result bool
+	conn := c.pool.Get()
+	res, err := redis.Bool(conn.Do("HDECRBY", key, field, val))
+	if err != nil {
+		return false
+	}
+	result = res
+	return result
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
