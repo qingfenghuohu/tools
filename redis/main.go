@@ -379,6 +379,19 @@ func (c Cache) Exists(key string) bool {
 	result = res
 	return result
 }
+func (c Cache) ExistsMulti(keys []string) map[string]bool {
+	var result map[string]bool
+	conn := c.pool.Get()
+	for _, k := range keys {
+		conn.Send("EXISTS", k)
+	}
+	conn.Flush()
+	for _, k := range keys {
+		res, _ := redis.Bool(conn.Receive())
+		result[k] = res
+	}
+	return result
+}
 func (c Cache) HIncr(key, field string, val int) int {
 	var result int
 	conn := c.pool.Get()
