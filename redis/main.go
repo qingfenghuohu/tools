@@ -379,7 +379,7 @@ func (c Cache) Exists(key string) bool {
 	return result
 }
 func (c Cache) ExistsMulti(keys []string) map[string]bool {
-	var result map[string]bool
+	result := map[string]bool{}
 	conn := c.pool.Get()
 	for _, k := range keys {
 		conn.Send("EXISTS", k)
