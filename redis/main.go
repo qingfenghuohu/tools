@@ -264,7 +264,6 @@ func (c Cache) HMGetMulti(data map[string][]string) map[string]map[string]string
 		}
 		for _, v := range val {
 			res, _ := redis.Values(conn.Receive())
-			result[key][v] = ""
 			if res[0] != nil {
 				result[key][v] = string(res[0].([]byte))
 			}
