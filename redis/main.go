@@ -259,12 +259,12 @@ func (c Cache) HMGetMulti(data map[string][]string) map[string]map[string]string
 	}
 	conn.Flush()
 	for key, val := range data {
-		if len(result[key]) == 0 {
-			result[key] = map[string]string{}
-		}
 		for _, v := range val {
 			res, _ := redis.Values(conn.Receive())
 			if res[0] != nil {
+				if len(result[key]) == 0 {
+					result[key] = map[string]string{}
+				}
 				result[key][v] = string(res[0].([]byte))
 			}
 		}
