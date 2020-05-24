@@ -108,6 +108,18 @@ func RemoveDuplicateElement(addrs []string) []string {
 	return result
 }
 
+func RemoveDuplicateInt(addrs []int) []int {
+	result := make([]int, 0, len(addrs))
+	temp := map[int]struct{}{}
+	for _, item := range addrs {
+		if _, ok := temp[item]; !ok {
+			temp[item] = struct{}{}
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
 func UrlEncode(str string) string {
 	return url.QueryEscape(str)
 }
