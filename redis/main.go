@@ -342,7 +342,7 @@ func (c Cache) IncrBy(name string, num int) int {
 }
 
 func (c Cache) DecrByMulti(data map[string]int) map[string]bool {
-	var result map[string]bool
+	result := map[string]bool{}
 	conn := c.pool.Get()
 	defer conn.Close()
 	for k, v := range data {
@@ -356,7 +356,7 @@ func (c Cache) DecrByMulti(data map[string]int) map[string]bool {
 }
 
 func (c Cache) IncrByMulti(data map[string]int) map[string]bool {
-	var result map[string]bool
+	result := map[string]bool{}
 	conn := c.pool.Get()
 	defer conn.Close()
 	for k, v := range data {
