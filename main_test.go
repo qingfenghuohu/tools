@@ -6,6 +6,13 @@ import (
 	"testing"
 )
 
+func TestMtRand1_Post(t *testing.T) {
+	res := redis.GetInstance("ppt").Zrange("a", 0, 4)
+	//res := redis.GetInstance("ppt").Zrevrange("a",2,4)
+	//data := map[int]string{6:"6a",7:"7a",8:"8a",9:"9a",5:"5a"}
+	//res := redis.GetInstance("ppt").Zadd("a",data)
+	fmt.Println(res)
+}
 func TestMtRand_Post(t *testing.T) {
 	//res := redis.GetInstance("ppt").Exists("hhh")
 	//res := redis.GetInstance("ppt").HDecr("aaa", "111", 3)

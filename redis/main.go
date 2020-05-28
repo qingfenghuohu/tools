@@ -424,6 +424,62 @@ func (c Cache) HExists(key, field string) bool {
 	result = res
 	return result
 }
+func (c Cache) Zadd(key string, data map[int]string) bool {
+	var result bool
+	conn := c.pool.Get()
+	d := []interface{}{}
+	d = append(d, key)
+	for k, v := range data {
+		d = append(d, k)
+		d = append(d, v)
+	}
+	res, err := redis.Bool(conn.Do("zadd", d...))
+	if err != nil {
+		return false
+	}
+	result = res
+	return result
+}
+func (c Cache) Zrange(key string, start, end int) []string {
+	result := []string{}
+	conn := c.pool.Get()
+	data, err := conn.Do("zrange", key, start, end)
+	if err != nil {
+		return result
+	}
+	for _, v := range data.([]interface{}) {
+		result = append(result, string(v.([]byte)))
+	}
+	return result
+}
+func (c Cache) Zrevrange(key string, start, end int) []string {
+	result := []string{}
+	conn := c.pool.Get()
+	data, err := conn.Do("zrevrange", key, start, end)
+	if err != nil {
+		return result
+	}
+	for _, v := range data.([]interface{}) {
+		result = append(result, string(v.([]byte)))
+	}
+	return result
+}
+func (c Cache) Zrem(key string, member ...string) bool {
+	result := true
+	conn := c.pool.Get()
+	for _, v := range member {
+		conn.Send("zrem", key, v)
+	}
+	conn.Flush()
+	num := len(member)
+	for i := 0; i < num; i++ {
+		res, _ := redis.Bool(conn.Receive())
+		if !res {
+			result = false
+		}
+	}
+	return result
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
