@@ -294,6 +294,15 @@ func (c Cache) HDel(name string, field string) bool {
 	}
 	return true
 }
+func (c Cache) HLen(name string) int {
+	conn := c.pool.Get()
+	defer conn.Close()
+	res, err := redis.Int(conn.Do("hlen", name))
+	if err != nil {
+		fmt.Println("hdel failed", err.Error())
+	}
+	return res
+}
 func (c Cache) HMDel(data []interface{}) bool {
 	conn := c.pool.Get()
 	defer conn.Close()
