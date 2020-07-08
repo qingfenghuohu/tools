@@ -509,6 +509,17 @@ func (c Cache) Zrem(key string, member ...string) bool {
 	}
 	return false
 }
+func (c Cache) HMDel(key string, fields ...string) bool {
+	res := c.Conn.HDel(key, fields...)
+	result, err := res.Result()
+	if err == nil {
+		fmt.Println(err.Error())
+	}
+	if result > 0 {
+		return true
+	}
+	return false
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
