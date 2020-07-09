@@ -509,16 +509,33 @@ func (c Cache) Zrem(key string, member ...string) bool {
 	}
 	return false
 }
-func (c Cache) HMDel(key string, fields ...string) bool {
-	res := c.Conn.HDel(key, fields...)
-	result, err := res.Result()
+func (c Cache) HDelMulti(data []map[string][]string) bool {
+	result := true
+	if len(data) <= 0 {
+		return false
+	}
+	pipe := c.Conn.Pipeline()
+	for _, val := range data {
+		for k, v := range val {
+			if len(v) > 0 {
+				pipe.HDel(k, v...)
+			}
+		}
+	}
+	res, err := pipe.Exec()
 	if err == nil {
 		fmt.Println(err.Error())
 	}
-	if result > 0 {
-		return true
+	for _, v := range res {
+		res1, err := v.(*redis.BoolCmd).Result()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		if !res1 {
+			result = res1
+		}
 	}
-	return false
+	return result
 }
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
