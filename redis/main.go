@@ -267,17 +267,18 @@ func (c Cache) HMGetMulti(data map[string][]string) map[string]map[string]string
 	for _, value := range res {
 		for k, v := range value.Args() {
 			key := value.Args()[1].(string)
-			if _, ok := result[key]; !ok {
-				result[key] = map[string]string{}
-			}
 			if value.Args()[0] == "hmget" && k != 0 && k != 1 {
 				res1, err := value.(*redis.SliceCmd).Result()
 				if err != nil {
 					fmt.Println(err.Error())
 				}
 				for kk, vv := range res1 {
-					if k-2 == kk {
-						result[key][v.(string)] = str.Obj2Str(vv)
+					res2 := str.Obj2Str(vv)
+					if k-2 == kk && res2 != "" {
+						if _, ok := result[key]; !ok {
+							result[key] = map[string]string{}
+						}
+						result[key][v.(string)] = res2
 					}
 				}
 			}
