@@ -144,12 +144,7 @@ func (c Cache) Expire(LifeTime int64, keys ...string) {
 	for _, v := range keys {
 		pipe.Expire(v, time.Duration(LifeTime*1000*1000*1000))
 	}
-	res, err := pipe.Exec()
-	for k, v := range res {
-		fmt.Println("key", k)
-		fmt.Println("val", v)
-	}
-	fmt.Println(res, err)
+	pipe.Exec()
 }
 
 func (c Cache) MGet(args ...string) map[string]interface{} {
