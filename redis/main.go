@@ -169,6 +169,7 @@ func (c Cache) Get(name string) string {
 	res := c.Conn.Get(name)
 	result, err := res.Result()
 	if err != nil {
+		//key为空时会报错,处理为返回空值
 		if "redis: nil" == err.Error() {
 			return ""
 		} else {
