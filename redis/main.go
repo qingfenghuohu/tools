@@ -169,7 +169,11 @@ func (c Cache) Get(name string) string {
 	res := c.Conn.Get(name)
 	result, err := res.Result()
 	if err != nil {
-		fmt.Println(err.Error())
+		if "redis: nil" == err.Error() {
+			return ""
+		} else {
+			fmt.Println(err.Error())
+		}
 	}
 	return result
 }
