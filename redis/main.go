@@ -524,16 +524,16 @@ func (c Cache) HDelMulti(data []map[string][]string) bool {
 		}
 	}
 	res, err := pipe.Exec()
-	if err == nil {
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 	for _, v := range res {
-		res1, err := v.(*redis.BoolCmd).Result()
+		res1, err := v.(*redis.IntCmd).Result()
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		if !res1 {
-			result = res1
+		if res1 <= 0 {
+			result = false
 		}
 	}
 	return result

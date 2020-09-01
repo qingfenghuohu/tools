@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -15,9 +14,9 @@ func Test_Set(t *testing.T) {
 	//GetInstance("ppt").Keys("k*")
 	//GetInstance("ppt").HMSet("ddd", map[string]interface{}{"rrr":35})
 	//d := []HMSMD{}
-	//d = append(d,HMSMD{Key:"wwwww",Data: map[string]interface{}{"ww":123}})
-	//d = append(d,HMSMD{Key:"ddd",Data: map[string]interface{}{"ww":123}})
-	//d = append(d,HMSMD{Key:"ccc",Data: map[string]interface{}{"ww":123}})
+	//d = append(d,HMSMD{Key:"wwwww",Data: map[string]interface{}{"ww":123},Ttl:3600})
+	//d = append(d,HMSMD{Key:"ddd",Data: map[string]interface{}{"ww":123},Ttl:3600})
+	//d = append(d,HMSMD{Key:"ccc",Data: map[string]interface{}{"ww":123},Ttl:3600})
 	//GetInstance("ppt").HMSetMulti(d)
 	//res := GetInstance("ppt").HMGet("aaa","111","222")
 	//res := GetInstance("ppt").HMGetMulti(map[string][]string{"aaa":[]string{"111","222"},"bbb":[]string{"333","444"}})
@@ -33,6 +32,12 @@ func Test_Set(t *testing.T) {
 	//res := GetInstance("ppt").HExists("aaa","111")
 	//res := GetInstance("ppt").Zadd("aaa1",map[int]string{1:"num",9:"name",100:"age"})
 	//res := GetInstance("ppt").Zrange("aaa1",0,2)
-	res := GetInstance("ppt").Zrem("aaa1", "num", "age")
-	fmt.Println(res)
+	//res := GetInstance("ppt").Zrem("aaa1", "num", "age")
+	//fmt.Println
+	dkey := []map[string][]string{}
+	karr := []string{"ww"}
+	delkey := map[string][]string{"ddd": karr}
+	dkey = append(dkey, delkey)
+	GetInstance("ppt").HDelMulti(dkey)
+
 }
