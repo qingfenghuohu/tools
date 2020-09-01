@@ -538,6 +538,11 @@ func (c Cache) HDelMulti(data []map[string][]string) bool {
 	}
 	return result
 }
+
+func (c Cache) Append(key, val string) {
+	c.Conn.Append(key, val)
+}
+
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
