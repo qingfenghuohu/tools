@@ -542,7 +542,19 @@ func (c Cache) HDelMulti(data []map[string][]string) bool {
 func (c Cache) Append(key, val string) {
 	c.Conn.Append(key, val)
 }
-
+func (c Cache) Dump(key string) string {
+	res := c.Conn.Dump(key)
+	result, err := res.Result()
+	if err != nil {
+		//key为空时会报错,处理为返回空值
+		if "redis: nil" == err.Error() {
+			return ""
+		} else {
+			fmt.Println(err.Error())
+		}
+	}
+	return result
+}
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
 	err := json.Unmarshal(data, result)
