@@ -3,6 +3,7 @@ module github.com/qingfenghuohu/tools
 go 1.12
 
 require (
+	github.com/8090Lambert/go-redis-parser v0.0.0-20190930082709-f33b7371cf5a // indirect
 	github.com/EDDYCJY/fake-useragent v0.2.0
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/gin-gonic/gin v1.6.3
@@ -15,6 +16,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/qingfenghuohu/config v0.0.0-20200203031926-10c960b0d6d6
 	github.com/satori/go.uuid v1.2.0
+	github.com/vrischmann/rdbtools v0.0.0-20141203205512-cd9eb17adda8
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

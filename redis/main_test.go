@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -34,10 +35,11 @@ func Test_Set(t *testing.T) {
 	//res := GetInstance("ppt").Zrange("aaa1",0,2)
 	//res := GetInstance("ppt").Zrem("aaa1", "num", "age")
 	//fmt.Println
-	dkey := []map[string][]string{}
-	karr := []string{"ww"}
-	delkey := map[string][]string{"ddd": karr}
-	dkey = append(dkey, delkey)
-	GetInstance("ppt").HDelMulti(dkey)
+	//dkey := []map[string][]string{}
+	//karr := []string{"ww"}
+	//delkey := map[string][]string{"ddd": karr}
+	//dkey = append(dkey, delkey)
+	res := GetInstance("ppt").DumpHGetAll("这是个测试id")
+	fmt.Println(res)
 
 }

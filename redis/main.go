@@ -5,9 +5,11 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/json-iterator/go"
 	"github.com/qingfenghuohu/config"
+	"github.com/qingfenghuohu/tools/array"
 	"github.com/qingfenghuohu/tools/str"
 	"net"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -542,18 +544,43 @@ func (c Cache) HDelMulti(data []map[string][]string) bool {
 func (c Cache) Append(key, val string) {
 	c.Conn.Append(key, val)
 }
-func (c Cache) Dump(key string) string {
+func (c Cache) DumpHGetAll(key string) map[string]string {
 	res := c.Conn.Dump(key)
 	result, err := res.Result()
+	res1 := []string{}
+	for k, v := range result {
+		if v == 65533 {
+			break
+		}
+		if k > 13 {
+			if v > 31 {
+				res1 = append(res1, string(v))
+			} else {
+				res1 = append(res1, string(9))
+			}
+		}
+	}
+	res2 := strings.Join(res1, "")
+	res3 := strings.Split(res2, string(9))
+	res3 = array.RemoveEmpty(res3)
+	res4 := map[string]string{}
+	total := len(res3)
+	for i := 1; i <= total; i++ {
+		if i%2 == 0 {
+			res4[res3[i-2]] = res3[i-1]
+			//fmt.Println(res3[i-2], res3[i-1], i, total)
+		}
+	}
+	//fmt.Println(res4)
 	if err != nil {
 		//key为空时会报错,处理为返回空值
 		if "redis: nil" == err.Error() {
-			return ""
+			return map[string]string{}
 		} else {
 			fmt.Println(err.Error())
 		}
 	}
-	return result
+	return res4
 }
 func Deserialization(data []byte, i *interface{}) (interface{}, error) {
 	result := new(interface{})
