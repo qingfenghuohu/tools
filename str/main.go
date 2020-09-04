@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func Obj2Str(value interface{}) string {
@@ -60,4 +61,24 @@ func Obj2Str(value interface{}) string {
 	}
 
 	return key
+}
+
+func FormatPrice(Price string) string {
+	var result string
+	tmp := strings.Split(Price, ".")
+	if len(tmp) <= 1 {
+		result = tmp[0] + ".00"
+	} else {
+		var i int
+		total := 2 - utf8.RuneCountInString(tmp[1])
+		if utf8.RuneCountInString(tmp[1]) > 2 {
+			result = tmp[0] + "." + tmp[1][0:2]
+		} else {
+			result = tmp[0] + "." + tmp[1]
+		}
+		for i = 0; i < total; i++ {
+			result = result + "0"
+		}
+	}
+	return result
 }
