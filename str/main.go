@@ -82,3 +82,17 @@ func FormatPrice(Price string) string {
 	}
 	return result
 }
+
+//反转字符串
+func Reverse(s string) string {
+	a := func(s string) *[]rune {
+		var b []rune
+		for _, k := range []rune(s) {
+			defer func(v rune) {
+				b = append(b, v)
+			}(k)
+		}
+		return &b
+	}(s)
+	return string(*a)
+}
